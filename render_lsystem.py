@@ -1,7 +1,5 @@
-import turtle
 import pygame
 import math
-import matplotlib.pyplot as plt
 import random
 
 DRAW_FORWARD = "F"
@@ -14,6 +12,9 @@ BRANCH_CLOSE = "]"
 START_POINT = (50, 50)
 
 STEP_LENGTH = 4
+
+WIDTH = 11000 / 5
+HEIGHT = 8000 / 5
 
 class Position:
     def __init__(self, x, y, heading):
@@ -121,22 +122,21 @@ def render(path, angle):
 
 
 def run():
-    #a = generate(4, "L", {"L":"LFRFL-F-RFLFR+F+LFRFL", "R":"RFLFR+F+LFRFL-F-RFLFR"})
-   
-
     #path = generate(4, "L", {"L":"L+R++R-L--LL-R+", "R":"-L+RR++R+L--L-R"})
     #path = generate(6, "X", {"X":"F[+X][-X]FX", "F":"FF"})
     #path = generate(5, "X", {"X":"F-[[X]+X]+F[+FX]-X", "F":"FF"})
 
-    P1 = Rule("F[+FFF+ff+FF]F[-F]F", 0.1)
-    P2 = Rule("F[+FF]F", 0.33)
-    P3 = Rule("F[-F]Ff+f+fF", 0.54)
+    # P1 = Rule("F[+FFF+ff+FF]F[-F]F", 0.1)
+    # P2 = Rule("F[+FF]F", 0.33)
+    # P3 = Rule("F[-F]Ff+f+fF", 0.54)
 
-    path = generate(6, "F", {"F": [P1, P2, P3]})
+    P1 = Rule("F+f-FF+F+FF+Ff+FF-f+FF-F-FF-Ff-FFF")
+    P2 = Rule("ffffff")
+
+    path = generate(2, "F+F+F+F", {"F": [P1], "f":[P2]})
 
     print(path)
-    render(path, 22.5)
-    #turtle.Screen().exitonclick()
+    render(path, 90)
         
 
 if __name__ == "__main__":

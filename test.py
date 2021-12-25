@@ -1,0 +1,17 @@
+from plotter import *
+
+p = Plotter()
+p.initialize_plotter()
+p.sp(1)
+p.pa(500,500)
+p.pd()
+p.pa(1500, 500)
+p.pa(1500, 1500)
+p.pa(500, 1500)
+p.pa(500, 500)
+p.pa(1500, 1500)
+p.pu()
+p.pa(1500, 500)
+p.pd()
+p.pa(500, 1500)
+p.pu()
