@@ -2,6 +2,8 @@ import pygame
 import math
 import random
 
+from position import Position
+
 DRAW_FORWARD = "F"
 MOVE_FORWARD = "f"
 PLUS = "+"
@@ -9,18 +11,17 @@ MINUS = "-"
 BRANCH_OPEN = "["
 BRANCH_CLOSE = "]"
 
-START_POINT = (50, 50)
+STEP_LENGTH = 60
 
-STEP_LENGTH = 4
+SCALE = 10
 
-WIDTH = 11000 / 5
-HEIGHT = 8000 / 5
+WIDTH = 11000
+HEIGHT = 8000
 
-class Position:
-    def __init__(self, x, y, heading):
-        self.x = x
-        self.y = y
-        self.heading = heading
+START_X = WIDTH / 2 + 1000
+START_Y = HEIGHT / 2 + 700
+START_HEADING = 90
+
 
 class Rule:
     def __init__(self, sequence, probability=1):
@@ -57,8 +58,15 @@ def render(path, angle):
     white = (255, 255, 255)
     black = (0,0,0)
 
-    size = width, height = 1000, 1000
     pygame.init()
+
+    width = WIDTH / SCALE
+    height = HEIGHT / SCALE
+
+    start_x = START_X / SCALE
+    start_y = START_Y / SCALE
+
+    step_length = STEP_LENGTH / SCALE
 
     screen = pygame.display.set_mode((width, height))
     # set the pygame window name
@@ -66,25 +74,22 @@ def render(path, angle):
 
     screen.fill(white)
 
-    startx = width / 2
-    starty = height / 2
-    startheading = -90
 
     # Define line size
     linesize = 1
 
-    oldpos = Position(startx, starty, startheading)
+    oldpos = Position(start_x, start_y, START_HEADING)
     
     stack = []
 
     for c in path:
         if c.isupper():
-            newpos = polar_to_cart(oldpos, STEP_LENGTH)
+            newpos = polar_to_cart(oldpos, step_length)
             pygame.draw.line(screen, black, (oldpos.x, oldpos.y), (newpos.x, newpos.y), linesize)
             pygame.display.flip()
             oldpos = newpos
         if c.islower():
-            oldpos = polar_to_cart(oldpos, STEP_LENGTH)
+            oldpos = polar_to_cart(oldpos, step_length)
         elif c == PLUS:
             oldpos = Position(oldpos.x, oldpos.y, oldpos.heading - angle)
         elif c == MINUS:
@@ -140,6 +145,4 @@ def run():
         
 
 if __name__ == "__main__":
-    run()
-
-    
+    run() 

@@ -9,6 +9,7 @@ BAUD = 9600
 class Plotter:
     def __init__(self):
         self.device = serial.Serial(self.find_device_name(), BAUD)
+        print(self.device.name)
 
     def setup(self):
         self.initialize_plotter()
@@ -39,6 +40,44 @@ class Plotter:
 
         return device_dir + filtered_values[0]
 
+    def prepare_hpgl(self, body, buflen=20):
+        start = [b"IN;PU;"]
+        end = [b"SP0;"]
+        final = start + body + end
+
+        # read in 20 bytes at a time or boundary
+        count = 0
+        buf = []
+        for ins in final:
+            if count + len(ins) >= buflen:
+                yield b"".join(buf)
+                buf = []
+                count = len(ins)
+            else:
+                count += len(ins)
+            buf.append(ins)
+
+        # send rest of the code
+        yield b"".join(buf)
+
+    def exec_hpgl(self, cmds):
+        body = self.prepare_hpgl(cmds)
+        for ins in body:
+            print(ins)
+            self.device.write(ins)
+
+            # For every line sent, end with OA, which reports back current
+            # position on the pen
+            self.device.write(b"OA;")
+            c = b""
+            data = b""
+            while c != b'\r':
+                c = self.device.read()
+                data += c
+                print("read: {}".format(c))
+            print("OA return: {}".format(data))
+            # We got data, mean OA got executed, so the instruction buffer
+            # is all consumed, ready to sent more.
 
 
 class PlotterException(Exception):
