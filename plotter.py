@@ -40,7 +40,7 @@ class Plotter:
 
         return device_dir + filtered_values[0]
 
-    def prepare_hpgl(self, body, buflen=20):
+    def prepare_hpgl(self, body, buflen=40):
         start = [b"IN;PU;"]
         end = [b"SP0;"]
         final = start + body + end
